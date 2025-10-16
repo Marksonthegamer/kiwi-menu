@@ -1,10 +1,35 @@
 import Adw from 'gi://Adw';
+import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 
 import { ExtensionPreferences } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
-import { ICONS } from './src/constants.js';
+const TEXT_DECODER = new TextDecoder();
+const SOURCE_DIR = Gio.File.new_for_uri(import.meta.url).get_parent();
+
+const ICONS = Object.freeze(
+  loadIconsMetadata().map((icon) => Object.freeze(icon))
+);
+
+function loadIconsMetadata() {
+  const filePath = GLib.build_filenamev([
+    SOURCE_DIR?.get_path() ?? '.',
+    'src',
+    'icons.json',
+  ]);
+
+  try {
+    const file = Gio.File.new_for_path(filePath);
+    const [, contents] = file.load_contents(null);
+    const data = JSON.parse(TEXT_DECODER.decode(contents));
+    return Array.isArray(data) ? data : [];
+  } catch (error) {
+    logError(error, `Failed to load icons metadata from ${filePath}`);
+    return [];
+  }
+}
 
 const GeneralPage = GObject.registerClass(
   class GeneralPage extends Adw.PreferencesPage {
