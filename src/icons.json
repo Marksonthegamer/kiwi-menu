@@ -58,5 +58,15 @@
     "idx": 11,
     "title": "Windows",
     "path": "/icons/windows-icon-symbolic.svg"
+  },
+  {
+    "idx": 12,
+    "title": "Grid",
+    "path": "/icons/menugrid-icon-symbolic.svg"
+  },
+  {
+    "idx": 13,
+    "title": "Shutdown",
+    "path": "/icons/shutdown-icon-symbolic.svg"
   }
 ]
