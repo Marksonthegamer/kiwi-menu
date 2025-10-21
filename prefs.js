@@ -1,3 +1,8 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * prefs.js - Implements the preferences UI for the Kiwi Menu extension.
+ */
+
 import Adw from 'gi://Adw';
 import Gdk from 'gi://Gdk';
 import Gio from 'gi://Gio';
@@ -304,7 +309,7 @@ export default class KiwiMenuPreferences extends ExtensionPreferences {
       title: 'Legal',
       activatable: true,
     });
-    row.add_suffix(new Gtk.Image({ icon_name: 'go-right-symbolic' }));
+    row.add_suffix(new Gtk.Image({ icon_name: 'go-next-symbolic' }));
     row.connect('activated', () => {
       this._openLegalDialog(window, baseUrl);
     });

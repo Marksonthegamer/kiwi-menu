@@ -1,3 +1,8 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * recentItemsSubmenu.js - Manages the recent items submenu in the Kiwi Menu.
+ */
+
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
@@ -85,8 +90,12 @@ export const RecentItemsSubmenu = GObject.registerClass(
 
     this.actor.connect('leave-event', () => {
       this._cancelOpenDelay();
+      const submenuOpen = this._recentMenu && this._recentMenu.isOpen;
+      if (submenuOpen) {
+        this._setSubmenuHover(true);
+      }
       this._scheduleClose();
-      return Clutter.EVENT_PROPAGATE;
+      return submenuOpen ? Clutter.EVENT_STOP : Clutter.EVENT_PROPAGATE;
     });
 
     this.actor.connect('button-press-event', () => {
@@ -236,6 +245,13 @@ export const RecentItemsSubmenu = GObject.registerClass(
         }
 
         const pointerState = this._getPointerState();
+        if (
+          pointerState === PointerState.INSIDE_RECENT ||
+          pointerState === PointerState.INSIDE_SUBMENU ||
+          pointerState === PointerState.BRIDGE
+        ) {
+          this._setSubmenuHover(true);
+        }
         if (pointerState === PointerState.OUTSIDE) {
           // Pointer has left both menus entirely
           this._closeAndDestroyRecentMenu();
@@ -309,6 +325,7 @@ export const RecentItemsSubmenu = GObject.registerClass(
         }
 
         if (pointerState === PointerState.BRIDGE) {
+          this._setSubmenuHover(true);
           return GLib.SOURCE_CONTINUE;
         }
 
@@ -465,6 +482,7 @@ export const RecentItemsSubmenu = GObject.registerClass(
       const enterId = this._recentMenuHoverActor.connect('enter-event', () => {
         this._cancelClose();
         this._cancelOpenDelay();
+        this._setSubmenuHover(true);
         return Clutter.EVENT_PROPAGATE;
       });
       this._recentMenuSignalIds.push({ target: this._recentMenuHoverActor, id: enterId });

@@ -1,4 +1,7 @@
 /*
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * forceQuitOverlay.js - Provides a force quit overlay for misbehaving applications.
+ *
  * Simplified force-quit overlay adapted from the Logo Menu sample extension.
  * Original work: force-quit/selection.js by Aryan20 and otto.allmendinger (MIT license).
  */
