@@ -196,17 +196,6 @@ export default class KiwiMenuPreferences extends ExtensionPreferences {
       })
     );
 
-    if (this.metadata.description) {
-      headerBox.append(
-        new Gtk.Label({
-          label: this.metadata.description,
-          wrap: true,
-          justify: Gtk.Justification.CENTER,
-          halign: Gtk.Align.CENTER,
-        })
-      );
-    }
-
     headerBox.append(
       new Gtk.Label({
         label: 'Arnis Kemlers (kem-a)',
@@ -214,12 +203,19 @@ export default class KiwiMenuPreferences extends ExtensionPreferences {
       })
     );
 
-    const versionName =
-      this.metadata['version-name'] ??
-      (this.metadata.version ? `${this.metadata.version}` : 'Unknown');
+    const rawVersionName = this.metadata['version-name'] ?? null;
+    const versionNumber =
+      this.metadata.version !== undefined && this.metadata.version !== null
+        ? `${this.metadata.version}`
+        : null;
+    const versionLabel =
+      rawVersionName && versionNumber
+        ? `${rawVersionName} (${versionNumber})`
+        : rawVersionName ?? versionNumber ?? 'Unknown';
+    const releaseVersion = rawVersionName ?? versionNumber;
 
     const versionButton = new Gtk.Button({
-      label: versionName,
+      label: versionLabel,
       halign: Gtk.Align.CENTER,
       margin_top: 4,
       tooltip_text: 'View release notes',
@@ -235,8 +231,8 @@ export default class KiwiMenuPreferences extends ExtensionPreferences {
 
     versionButton.connect('clicked', () => {
       let targetUrl = releasesBaseUrl;
-      if (versionName && versionName !== 'Unknown') {
-        const safeVersion = encodeURIComponent(versionName);
+      if (releaseVersion && releaseVersion !== 'Unknown') {
+        const safeVersion = encodeURIComponent(releaseVersion);
         targetUrl = `${releasesBaseUrl}/tag/v${safeVersion}`;
       }
 
