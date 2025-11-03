@@ -10,9 +10,11 @@
 
 | Language | Code | Status | Completion |
 |----------|------|--------|------------|
+| Chinese (Simplified) | zh-CN | 🟢 Complete | 41/42 (97.6%) |
 | German | de | 🟢 Complete | 42/42 (100%) |
 | Spanish | es | 🟢 Complete | 42/42 (100%) |
 | Estonian | et | 🟢 Complete | 41/42 (97.6%) |
+| Persian | fa | 🟢 Complete | 41/42 (97.6%) |
 | Finnish | fi | 🟢 Complete | 41/42 (97.6%) |
 | French | fr | 🟢 Complete | 42/42 (100%) |
 | Italian | it | 🟢 Complete | 41/42 (97.6%) |
