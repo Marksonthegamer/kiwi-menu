@@ -7,8 +7,6 @@ import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
 import St from 'gi://St';
-import Clutter from 'gi://Clutter';
-
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
@@ -168,10 +166,10 @@ export const KiwiMenu = GObject.registerClass(
       return activitiesEntry.container ?? activitiesEntry;
     }
 
-    _renderPopupMenu() {
+    async _renderPopupMenu() {
       this.menu.removeAll();
 
-      const layout = this._generateLayout();
+      const layout = await this._generateLayout();
       layout.forEach((item) => {
         switch (item.type) {
           case 'menu':
@@ -187,11 +185,11 @@ export const KiwiMenu = GObject.registerClass(
       });
     }
 
-    _generateLayout() {
+    async _generateLayout() {
       const fullName = GLib.get_real_name() || GLib.get_user_name() || '';
 
       const layoutSource = this._layout ?? [];
-      const hasMultipleUsers = this._hasMultipleLoginUsers();
+      const hasMultipleUsers = await this._hasMultipleLoginUsers();
       const items = [];
 
       for (const item of layoutSource) {
@@ -225,48 +223,61 @@ export const KiwiMenu = GObject.registerClass(
       return items;
     }
 
-    _hasMultipleLoginUsers() {
+    async _hasMultipleLoginUsers() {
       try {
-        const [success, contents] = GLib.file_get_contents('/etc/passwd');
-        if (!success || !contents) {
-          return false;
-        }
-        const decoder = new TextDecoder();
-        const data = decoder.decode(contents);
+        const file = Gio.File.new_for_path('/etc/passwd');
+        
+        return await new Promise((resolve, reject) => {
+          file.load_contents_async(null, (source, result) => {
+            try {
+              const [success, contents] = source.load_contents_finish(result);
+              if (!success || !contents) {
+                resolve(false);
+                return;
+              }
+              
+              const decoder = new TextDecoder();
+              const data = decoder.decode(contents);
 
-        let count = 0;
-        for (const line of data.split('\n')) {
-          if (!line || line.startsWith('#')) {
-            continue;
-          }
+              let count = 0;
+              for (const line of data.split('\n')) {
+                if (!line || line.startsWith('#')) {
+                  continue;
+                }
 
-          const parts = line.split(':');
-          if (parts.length < 7) {
-            continue;
-          }
+                const parts = line.split(':');
+                if (parts.length < 7) {
+                  continue;
+                }
 
-          const uid = Number.parseInt(parts[2], 10);
-          const shell = parts[6]?.trim();
+                const uid = Number.parseInt(parts[2], 10);
+                const shell = parts[6]?.trim();
 
-          if (!Number.isInteger(uid)) {
-            continue;
-          }
+                if (!Number.isInteger(uid)) {
+                  continue;
+                }
 
-          if (
-            uid >= 1000 &&
-            shell &&
-            shell !== '/usr/sbin/nologin' &&
-            shell !== '/usr/bin/nologin' &&
-            shell !== '/bin/false'
-          ) {
-            count += 1;
-            if (count > 1) {
-              return true;
+                if (
+                  uid >= 1000 &&
+                  shell &&
+                  shell !== '/usr/sbin/nologin' &&
+                  shell !== '/usr/bin/nologin' &&
+                  shell !== '/bin/false'
+                ) {
+                  count += 1;
+                  if (count > 1) {
+                    resolve(true);
+                    return;
+                  }
+                }
+              }
+
+              resolve(false);
+            } catch (error) {
+              reject(error);
             }
-          }
-        }
-
-        return false;
+          });
+        });
       } catch (error) {
         logError(error, 'Failed to determine available login users');
         return false;
