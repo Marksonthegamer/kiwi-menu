@@ -1,8 +1,14 @@
-# <img width="56" height="66" alt="kiwimenu" src="https://github.com/user-attachments/assets/96437e0e-8884-4041-a3b2-c60ff15cd433" /> Kiwi Menu
+<!-- Row 1: install & reach -->
+[![Install on GNOME Extensions](https://img.shields.io/badge/Install_on-GNOME_Extensions-blue?logo=gnome)](https://extensions.gnome.org/extension/8697/kiwi-menu/)
+[![EGO downloads](https://img.shields.io/gnome-extensions/dt/kiwimenu@kemma?label=EGO%20downloads)](https://extensions.gnome.org/extension/8697/kiwi-menu/)
+![Shell 45–49](https://img.shields.io/badge/GNOME_Shell-45–49-informational?logo=gnome)
+[![License](https://img.shields.io/github/license/kem-a/kiwi-menu)](https://github.com/kem-a/kiwi-menu/blob/main/LICENSE)
+[![Latest release](https://img.shields.io/github/v/release/kem-a/kiwi-menu?sort=semver)](https://github.com/kem-a/kiwi-menu/releases/latest)
+[![Stars](https://img.shields.io/github/stars/kem-a/kiwi-menu?style=social)](https://github.com/kem-a/kiwi-menu/stargazers)
+
+# <img width="43" height="48" alt="kiwimenu" src="https://github.com/user-attachments/assets/96437e0e-8884-4041-a3b2-c60ff15cd433" /> Kiwi Menu
 
 Kiwi Menu replaces the Activities button with a compact, macOS-inspired launcher that keeps your most common session actions one click away.
-
-[<img width="228" height="106" alt="Get it on GNOME Extensions" src="https://github.com/user-attachments/assets/8aa08f2b-a902-48ca-999d-149591b49da7" />](https://extensions.gnome.org/extension/8697/kiwi-menu/)
 
 ## Features
 
